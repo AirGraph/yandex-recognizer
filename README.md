@@ -23,10 +23,6 @@ are being installed.
 
 QuickStart
 ==========
-Install yandex-recognizer:
-```
-npm install yandex-recognizer --save
-```
 Add require to your app:
 ```
 var yandex = require('yandex-recognizer');
