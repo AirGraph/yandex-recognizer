@@ -31,7 +31,7 @@ function main() {
 					onConnect: onConnect,
 					onResult: onResult,
 					onError: onError,
-					apikey: 'YOUR-OWN-YANDEX-API-KEY',
+					apikey: 'YOUR-OWN-YANDEX-API-KEY'
 					
 				});
 				
@@ -94,7 +94,7 @@ function commandLineOptions() {
 	console.log(clo.getUsage({
 			
 		title: "Usage",
-		description: "node ysr -f|--file value [-s|--sample value]"
+		description: "node test -f|--file value [-s|--sample value]"
 
 	}));
 	
