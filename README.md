@@ -34,11 +34,11 @@ using node.js and yandex-recognizer. Its scope is only how to set up
 the yandex-recognizer.
 
 1. Install yandex-recognizer: npm install yandex-recognizer --save
-2. Add require to your app like this: var yandex = require('yandex-recognizer');
-3. Create a service: var service = yandex.Recognizer({config});
-4. To connect service to your app: service.connect();
-5. In onConnect(sessionId, code) method you will receive session Id and
-session code values and here you will send suond data: service.send(db, fileSize, sbLength);
+2. Add require to your app: var yandex = require('yandex-recognizer');
+3. Create service: var service = yandex.Recognizer({config});
+4. Connect service to your app: service.connect();
+5. In onConnect(sessionId, code) method you will send suond data:
+service.send(db, fileSize, sbLength);
 * db (typeof Buffer) - your sound file data;
 * fileSile (typeof Number) - length of your db.
 * sbLength (typeof Number) - length of sample buffer.
