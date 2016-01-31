@@ -48,7 +48,7 @@ Connect service to your app:
 ```
 service.connect();
 ```
-onConnect(sessionId, code) method will launched in case of successfull connect. Here you send sound data for recognition:
+`onConnect(sessionId, code)` method will launched in case of successfull connect. Here you send sound data for recognition:
 ```
 service.send(db, fileSize, sbLength);
 
@@ -56,9 +56,9 @@ service.send(db, fileSize, sbLength);
 // fileSile (typeof Number) - length of your db.
 // sbLength (typeof Number) - length of sample buffer.
 ```
-onResult(text, uttr, merge, words) method receive recognized text and any other data.
+`onResult(text, uttr, merge, words)` method receive recognized text and any other data.
 
-onError(errMsg) method receive error massages.
+`onError(errMsg)` method receive error massages.
 
 
 ## Next Steps
