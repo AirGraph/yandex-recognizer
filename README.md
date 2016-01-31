@@ -45,10 +45,10 @@ var service = yandex.Recognizer({config});
 ```
 config object must define at least 4 properties:
 ```
-onConnect: function(sessionId, code);
-onResult: function(text, uttr, merge, words);
-onError: function(errMsg);
-apikey: 'YOUR-OWN-API-KEY'
+onConnect: function(sessionId, code),
+onResult: function(text, uttr, merge, words),
+onError: function(errMsg),
+apikey: 'YOUR-OWN-YANDEX-API-KEY'
 ```
 All other properties will be set by default. See source code for all available config properties.
 
@@ -60,7 +60,7 @@ onConnect(sessionId, code) method will launched in case of successfull connect. 
 ```
 service.send(db, fileSize, sbLength);
 
-// db (typeof Buffer) - your sound file data;
+// db (typeof Buffer) - your sound file data.
 // fileSile (typeof Number) - length of your db.
 // sbLength (typeof Number) - length of sample buffer.
 ```
