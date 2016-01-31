@@ -31,23 +31,23 @@ The quick start guide will show you how to setup a simple application
 using node.js and yandex-recognizer. Its scope is only how to set up
 the yandex-recognizer.
 
-1. Install yandex-recognizer:
+Install yandex-recognizer:
 ```
 npm install yandex-recognizer --save
 ```
-2. Add require to your app:
+Add require to your app:
 ```
 var yandex = require('yandex-recognizer');
 ```
-3. Create service:
+Create service:
 ```
 var service = yandex.Recognizer({config});
 ```
-4. Connect service to your app:
+Connect service to your app:
 ```
 service.connect();
 ```
-5. In onConnect(sessionId, code) method you will send sound data:
+In onConnect(sessionId, code) method you will send sound data:
 ```
 service.send(db, fileSize, sbLength);
 
@@ -55,9 +55,9 @@ service.send(db, fileSize, sbLength);
 // fileSile (typeof Number) - length of your db.
 // sbLength (typeof Number) - length of sample buffer.
 ```
-6. In onResult(text, uttr, merge, words) method you will receive recognized text and any other data.
-7. In onError(errMsg) method you will receive error massages.
-8. Your {config} object must define at least 4 properties:
+In onResult(text, uttr, merge, words) method you will receive recognized text and any other data.
+In onError(errMsg) method you will receive error massages.
+Your {config} object must define at least 4 properties:
 ```
 onConnect: function(sessionId, code);
 onResult: function(text, uttr, merge, words);
