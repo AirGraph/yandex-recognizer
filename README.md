@@ -6,10 +6,6 @@ Node JS interface to yandex speech recognition service
 * mailing list: Victor.Vazin@gmail.com
 
 ## Installation
-
-The recommended way to get started using the yandex-recognizer is
-by using the `NPM` (Node Package Manager) to install the dependency in your project.
-
 Install the yandex-recognizer and it's dependencies by executing
 the following `NPM` command.
 ```
@@ -39,7 +35,7 @@ Create service:
 ```
 var service = yandex.Recognizer({config});
 ```
-config object must define at least 4 properties:
+`config` object must define at least 4 properties:
 ```
 onConnect: function(sessionId, code),
 onResult: function(text, uttr, merge, words),
