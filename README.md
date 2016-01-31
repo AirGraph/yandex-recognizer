@@ -41,9 +41,9 @@ onConnect: function(sessionId, code),
 onResult: function(text, uttr, merge, words),
 onError: function(errMsg),
 apikey: 'YOUR-OWN-YANDEX-API-KEY'
-```
-All other properties will be set by default (see source code for all available config properties).
 
+// All other properties will be set by default (see source code for all available).
+```
 Connect service to your app:
 ```
 service.connect();
