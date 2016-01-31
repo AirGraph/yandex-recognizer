@@ -62,4 +62,4 @@ Input sound file format may be:
 
 ## Next Steps
  * [yandex-recognizer documentation](https://github.com/AirGraph/yandex-recognizer)
- * [example](https://github.com/AirGraph/yandex-recognizer/example)
+ * [example](https://github.com/AirGraph/yandex-recognizer/tree/master/example)
