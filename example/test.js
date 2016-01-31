@@ -1,5 +1,5 @@
-//	Yandex Speech Recognition for Node JS 4.2.4.
-//		Version 0.1.
+//	Yandex Speech Recognition example for Node JS 4.2.4.
+//		Version 0.0.1.
 //			Copyright (c) Jungle Software, 2016.
 
 var fs = require('fs'),	
@@ -31,7 +31,7 @@ function main() {
 					onConnect: onConnect,
 					onResult: onResult,
 					onError: onError,
-					apikey: 'c189abe5-3d40-4870-bbe7-5a9a6f3dfa47',
+					apikey: 'YOUR-OWN-YANDEX-API-KEY',
 					
 				});
 				
