@@ -37,20 +37,20 @@ the yandex-recognizer. For more in depth coverage we encourage reading the tutor
 2. Add require to your app like this: var yandex = require('yandex-recognizer');
 3. Create a service: var service = yandex.Recognizer({config});
 4. To connect service to your app: service.connect();
-5. In onConnect(sessionId, code) method (see config) you will receive session Id and
-session code values and here you will send suond data: service.send(db, fileSize);
+5. In onConnect(sessionId, code) method you will receive session Id and
+session code values and here you will send suond data: service.send(db, fileSize, sbLength);
 * db (typeof Buffer) - your sound file data;
 * fileSile (typeof Number) - length of your db.
-6. In onResult(text, uttr, merge, words) method (see config) you will receive
+* sbLength (typeof Number) - length of sample buffer.
+6. In onResult(text, uttr, merge, words) method you will receive
 recognized text and any other data.
-7. In onError(errMsg) method (see config) you will receive error massages.
+7. In onError(errMsg) method you will receive error massages.
 8. In config object you must define 4 proprties:
 * onConnect: function(sessionId, code);
 * onResult: function(text, uttr, merge, words);
 * onError: function(errMsg);
 * apikey: 'YOUR-OWN-API-KEY'
-All other properties will be set by default. If you need to set additioanl available
-properties of config for your app, please, read the tutorial.
+All other properties will be set by default. See source code.
 
 ## Next Steps
 
