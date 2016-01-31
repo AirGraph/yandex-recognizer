@@ -27,10 +27,6 @@ are being installed.
 
 QuickStart
 ==========
-The quick start guide will show you how to setup a simple application
-using node.js and yandex-recognizer. Its scope is only how to set up
-the yandex-recognizer.
-
 Install yandex-recognizer:
 ```
 npm install yandex-recognizer --save
