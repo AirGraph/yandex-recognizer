@@ -1,8 +1,8 @@
 {
-  "name": "examole",
+  "name": "yr-example",
   "version": "0.0.1",
   "description": "Example for yandex-recognizer",
-  "main": "example.js",
+  "main": "test.js",
   "dependencies": {
     "yandex-recognizer": "~0.0.1",
     "command-line-args": "~2.1.4"
