@@ -1,0 +1,12 @@
+{
+  "name": "examole",
+  "version": "0.0.1",
+  "description": "Example for yandex-recognizer",
+  "main": "example.js",
+  "dependencies": {
+    "yandex-recognizer": "~0.0.1",
+    "command-line-args": "~2.1.4"
+  },
+  "author": "Jungle Software",
+  "license": "ISC"
+}
