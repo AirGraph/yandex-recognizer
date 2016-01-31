@@ -56,8 +56,13 @@ service.send(db, fileSize, sbLength);
 
 `onError(errMsg)` method receive error massages.
 
+## Limitation
+Input file formats are: 
+
+* Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 16000 (namespace.FORMAT.PCM16 (default))
+* Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 441000 (namespace.FORMAT.PCM44)
 
 ## Next Steps
 
  * [yandex-recognizer documentation](https://github.com/AirGraph/yandex-recognizer)
- * [Star us on GitHub](https://github.com/AirGraph/yandex-recognizer)
+ * [example](https://github.com/AirGraph/yandex-recognizer/example)
