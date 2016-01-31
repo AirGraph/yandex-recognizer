@@ -1,0 +1,12 @@
+{
+  "name": "yandex-recognizer",
+  "version": "0.0.1",
+  "description": "Yandex speech recognizer",
+  "main": "yandex-recognizer.js",
+  "dependencies": {
+    "node-uuid": "~1.4.7",
+    "websocket": "~1.0.22"
+  },
+  "author": "Yandex & Jungle Software",
+  "license": "ISC"
+}
