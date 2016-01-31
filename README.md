@@ -58,7 +58,7 @@ service.send(db, fileSize, sbLength);
 Input sound file format may be: 
 
 * Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 16000 (`namespace.FORMAT.PCM16` (default))
-* Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 441000 (`namespace.FORMAT.PCM44`)
+* Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 44100 (`namespace.FORMAT.PCM44`)
 
 ## Next Steps
  * [yandex-recognizer documentation](https://github.com/AirGraph/yandex-recognizer)
