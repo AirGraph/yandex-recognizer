@@ -50,13 +50,13 @@ onResult: function(text, uttr, merge, words);
 onError: function(errMsg);
 apikey: 'YOUR-OWN-API-KEY'
 ```
-All other properties will be set by default. See source code.
+All other properties will be set by default. See source code for all available config properties.
 
 Connect service to your app:
 ```
 service.connect();
 ```
-onConnect(sessionId, code) method send your sound data:
+onConnect(sessionId, code) method will launched in case of successfull connect and here your send sound data:
 ```
 service.send(db, fileSize, sbLength);
 
