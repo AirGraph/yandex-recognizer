@@ -46,13 +46,13 @@ onResult: function(text, uttr, merge, words),
 onError: function(errMsg),
 apikey: 'YOUR-OWN-YANDEX-API-KEY'
 ```
-All other properties will be set by default. See source code for all available config properties.
+All other properties will be set by default (see source code for all available config properties).
 
 Connect service to your app:
 ```
 service.connect();
 ```
-onConnect(sessionId, code) method will launched in case of successfull connect. Here your send sound data for recognition:
+onConnect(sessionId, code) method will launched in case of successfull connect. Here you send sound data for recognition:
 ```
 service.send(db, fileSize, sbLength);
 
