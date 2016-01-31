@@ -52,7 +52,7 @@ service.send(db, fileSize, sbLength);
 // fileSile (typeof Number) - length of your db.
 // sbLength (typeof Number) - length of sample buffer.
 ```
-`onResult(text, uttr, merge, words)` method receive recognized text and any other data.
+`onResult(text, uttr, merge, words)` method receive recognized text and some other data.
 
 `onError(errMsg)` method receive error massages.
 
