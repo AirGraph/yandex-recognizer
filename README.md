@@ -38,9 +38,9 @@ the yandex-recognizer.
 3. Create service: var service = yandex.Recognizer({config});
 4. Connect service to your app: service.connect();
 5. In onConnect(sessionId, code) method you will send sound data: service.send(db, fileSize, sbLength);
-* db (typeof Buffer) - your sound file data;
-* fileSile (typeof Number) - length of your db.
-* sbLength (typeof Number) - length of sample buffer.
+- db (typeof Buffer) - your sound file data;
+- fileSile (typeof Number) - length of your db.
+- sbLength (typeof Number) - length of sample buffer.
 6. In onResult(text, uttr, merge, words) method you will receive recognized text and any other data.
 7. In onError(errMsg) method you will receive error massages.
 8. Your {config} object must define at least 4 properties:
