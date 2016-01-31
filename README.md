@@ -56,7 +56,7 @@ Connect service to your app:
 ```
 service.connect();
 ```
-onConnect(sessionId, code) method will launched in case of successfull connect and here your send sound data:
+onConnect(sessionId, code) method will launched in case of successfull connect. Here your send sound data for recognition:
 ```
 service.send(db, fileSize, sbLength);
 
