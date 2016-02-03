@@ -1,4 +1,4 @@
-//	Yandex Speech Recognition example for Node JS 4.2.4.
+//	Yandex Speech Recognition test for Node JS 4.2.4.
 //		Version 0.0.1.
 //			Copyright (c) Jungle Software, 2016.
 
@@ -31,7 +31,7 @@ function main() {
 					onConnect: onConnect,
 					onResult: onResult,
 					onError: onError,
-					apikey: 'YOUR-OWN-YANDEX-API-KEY'
+					apikey: 'YOUR-OWN-YANDEX-API-KEY',
 					
 				});
 				
@@ -44,23 +44,22 @@ function main() {
 
 function onConnect(sessionId, code) {
 
-	console.log('onConnect, sessionId: ' + sessionId);
-	console.log('onConnect, code: ' + code);
+	console.log('onConnect:');
+	console.log('sessionId: ' + sessionId);
+	console.log('code: ' + code + '\n');
+	
 	service.send(db, fileSize, sbLength);
 	
 }
 
-function onResult(text, uttr, merge, words) {
+function onResult(data) {
 
-	if(uttr) {
-	
-		for(var i = 0; i < words.length; i += 1) {
-			
-			console.log(words[i]);
-			
-		}
-		
-	} else { console.log('onResult, uttr: false, text: ' + text); }
+	console.log('onResult:');
+	console.log('text: ' + data.text);
+	console.log('uttr: ' + data.uttr);
+	console.log('merge: ' + data.merge);
+	console.log('words: ' + data.words);
+	console.log('close: ' + data.close + '\n');
 	
 }
 
@@ -84,8 +83,8 @@ function commandLineOptions() {
 			
 		} else {
 		
-			sbLength = 65536;
-			console.log('Sample length is set to 65536 by default...');
+			sbLength = 128000;
+			console.log('Sample length is set to 128000 by default...\n');
 			return options;
 			
 		}
@@ -94,7 +93,7 @@ function commandLineOptions() {
 	console.log(clo.getUsage({
 			
 		title: "Usage",
-		description: "node test -f|--file value [-s|--sample value]"
+		description: "node ysr -f|--file value [-s|--sample value]"
 
 	}));
 	
