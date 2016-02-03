@@ -1,5 +1,5 @@
 //	Yandex Speech Recognition test for Node JS 4.2.4.
-//		Version 0.0.1.
+//		Version 0.0.3.
 //			Copyright (c) Jungle Software, 2016.
 
 var fs = require('fs'),	
@@ -63,7 +63,12 @@ function onResult(data) {
 	
 }
 
-function onError(errMsg) { console.log(errMsg); }
+function onError(e) {
+
+	console.log('onError:');
+	for(var i in e) { console.log(i + ': ' + e[i]); }
+	
+}
 
 function commandLineOptions() {
 
@@ -93,7 +98,7 @@ function commandLineOptions() {
 	console.log(clo.getUsage({
 			
 		title: "Usage",
-		description: "node ysr -f|--file value [-s|--sample value]"
+		description: "node ysr -f|--file name.ext [-s|--sample value]"
 
 	}));
 	
