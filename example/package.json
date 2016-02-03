@@ -4,7 +4,7 @@
   "description": "Test for yandex-recognizer",
   "main": "test.js",
   "dependencies": {
-    "yandex-recognizer": "~0.0.1",
+    "yandex-recognizer": "~0.0.3",
     "command-line-args": "~2.1.4"
   },
   "author": "Jungle Software",
