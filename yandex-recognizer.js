@@ -30,7 +30,8 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		format: namespace.FORMAT.PCM16,
 		url: 'wss://webasr.yandex.net/asrsocket.ws',
 		applicationName: 'jsapi',
-
+		
+		partialResults: false,
 		punctuation: true,
 		allowStrongLanguage: true,
 		model: 'notes',
@@ -77,7 +78,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * Создает новый объект типа Recognizer.
 	 * @class Создает сессию и отправляет запрос на сервер для распознавания речи.
 	 * @name Recognizer
-	 * @param {Object} [config] Опции.
+	 * @param {Object} [config] Конфигурация.
 	 * @param {callback:initCallback} [config.onConnect] Функция-обработчик,
 	 * которая будет вызвана после успешной инициализации сессии. Умолчания нет.
 	 * @param {callback:dataCallback} [config.onResult] Функция-обработчик,
@@ -113,6 +114,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * Возможные значения: 'ru-RU'; 'en-US'; 'tr-TR'; 'uk-UA'.
 	 * @param {String} [config.applicationName] Название приложения.
 	 * По умолчанию: 'jsapi'
+	 * @param {Boolean} [config.partialResults=true] Получать ли промежуточные результаты.
 	 */
 	var Recognizer = function(config) {
 	
@@ -124,7 +126,6 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 
 		// Backward compatibility
 		this.config.key = this.config.apikey;
-		this.sessionId = null;
 
 	};
 
@@ -136,7 +137,10 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		 * @private
 		 */
 		_sendRaw: function (data) {
+		
 			if (this.client.readyState === this.client.OPEN) { this.client.send(data); }
+			else { console.log('Missing data!!! readyState != OPEN!!!'); }
+			
 		},
 
 		/**
@@ -145,7 +149,9 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		 * @private
 		 */
 		_sendJson: function (json) {
+		
 			this._sendRaw(JSON.stringify({type: 'message', data: json}));
+			
 		},
 
 		/**
@@ -153,62 +159,34 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		 */
 		connect: function () {
 
-			this.sessionId = null;						
+			this.client = new W3CWebSocket(
 			
-			this.client = new W3CWebSocket(this.config.url);
+				this.config.url, [], null, null, null,
+				{ fragmentOutgoingMessages: false }
+				
+			);
 			this.client.binaryType = 'arraybuffer';
 			
-			this.client.onopen = function() {
-						
-				console.log('event type: onopen');
-				console.log('W3C WebSocket client connected...');
-				
-				this._sendJson(this.config);
-
-			}.bind(this);
-
+			this.client.onopen = function() { this._sendJson(this.config); }.bind(this);
 			this.client.onmessage = function(e) {
 
-				console.log('event type: onmessage');
 				var message = JSON.parse(e.data);
 				if (message.type == 'InitResponse'){
 						
-					console.log('message.type: InitResponse');
-					this.sessionId = message.data.sessionId;
 					this.config.onConnect(message.data.sessionId, message.data.code);
 						
 				} else if (message.type == 'AddDataResponse'){
 						
-					console.log('message.type: AddDataResponse');
-					this.config.onResult(
-							
-						message.data.text,
-						message.data.uttr,
-						message.data.merge,
-						message.data.words
-								
-					);
-					
+					this.config.onResult(message.data);
 					if(message.data.uttr) { this.client.close(); }
 					
-					if (typeof message.data.close !== 'undefined' && message.data.close) {
-							
-						console.log('message.data.close: ' + message.data.close);
-						this.client.close();
-							
-					}
-						
 				} else if (message.type == 'Error'){
 						
-					console.log('message.type: Error');
-					this.config.onError('Session ' + this.sessionId + ': ' + message.data);
-					this.client.close();
+					this.config.onError('Connection error:\n' + message.data + '\n');
 								
 				} else {
 						
-					console.log('message.type: any other');
-					this.config.onError('Session ' + this.sessionId + ': ' + message);
-					this.client.close();
+					this.config.onError('Unknown message type: ' + message.type + '\n');
 							
 				}
 						
@@ -216,25 +194,24 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 					
 			this.client.onerror = function() {
 
-				console.log('event type: onerror');
-				this.config.onError('onError...');
+				this.config.onError('Client onerror event...');
 
 			}.bind(this);
 
 			this.client.onclose = function(event) {
 
-				console.log('event type: onclose');
-				this.config.onError('onClose, event.wasClean: ' + event.wasClean);
-				this.config.onError('onClose, event.code: ' + event.code);
-				this.config.onError('onClose, event.reason: ' + event.reason);
+				console.log('Client onclose event:');
+				this.config.onError('wasClean: ' + event.wasClean);
+				this.config.onError('code: ' + event.code);
+				this.config.onError('reason: ' + event.reason + '\n');
 
 			}.bind(this);
 		},
 
 		/**
-		 * Отсылает данные сервису для распознавания.
-		 * @param {Buffer} db Буфер входного файла.
-		 * @param {Number} dbLength Длина буфера файла в байтах.
+		 * Отсылает данные сервису распознавания.
+		 * @param {Buffer} db Буфер данных входного файла.
+		 * @param {Number} dbLength Длина буфера данных в байтах.
 		 * @param {Number} sbLength Длина буфера сэмпла в Int16.
 		 */
 		send: function(db, dbLength, sbLength) {
@@ -253,11 +230,16 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 				}
 
 				this._sendRaw(sb);
-				dbOffset = dbOffset + dbFrame;
-				dbTail = dbTail - dbFrame;
+				
+				dbOffset += dbFrame;
+				dbTail -= dbFrame;
+				
+				ab = new ArrayBuffer(sbLength);
+				sb = new Int16Array(ab);
+				sb.fill(0);
+
 			}
 
-			sb.fill(0);
 			sbIndex = 0;
 			for(dbIndex = dbOffset; dbIndex < dbTail; dbIndex += 2) {
 			
@@ -266,14 +248,8 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 				
 			}
 
-			this._sendRaw(sb);
+			this._sendRaw(sb);			
 		},
-		
-		/**
-		 * Принудительно завершает запись звука и отсылает запрос
-		 * (не закрывает сессию распознавания, пока не получит от сервера последний ответ).
-		 */
-		finish: function () { this._sendJson({command: 'finish'}); },
 		
 		/**
 		 * Завершает сессию распознавания речи, закрывая соединение с сервером.
