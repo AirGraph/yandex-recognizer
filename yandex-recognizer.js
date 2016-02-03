@@ -14,7 +14,6 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 */
 	namespace.FORMAT = {
 	
-		PCM8: 'audio/x-pcm;bit=16;rate=8000',
 		PCM16: 'audio/x-pcm;bit=16;rate=16000',
 		PCM44: 'audio/x-pcm;bit=16;rate=44100',
 		
@@ -89,7 +88,6 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * @param {config.format} Формат аудиопотока. По умолчанию: PCM16.
 	 * Возможные значения:
 	 * <ul>
-	 *	<li>PCM8: 'audio/x-pcm;bit=16;rate=8000';</li>
 	 *	<li>PCM16: 'audio/x-pcm;bit=16;rate=16000';</li>
 	 *	<li>PCM44: 'audio/x-pcm;bit=16;rate=44100';</li>
 	 * </ul>
@@ -144,17 +142,6 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		},
 
 		/**
-		 * Stringify JSON and send it to websocket.
-		 * @param {Object} json Object needed to be send to websocket.
-		 * @private
-		 */
-		_sendJson: function (json) {
-		
-			this._sendRaw(JSON.stringify({type: 'message', data: json}));
-			
-		},
-
-		/**
 		 * Запускает процесс распознавания.
 		 */
 		connect: function () {
@@ -167,7 +154,12 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 			);
 			this.client.binaryType = 'arraybuffer';
 			
-			this.client.onopen = function() { this._sendJson(this.config); }.bind(this);
+			this.client.onopen = function(e) {
+			
+				this._sendRaw(JSON.stringify({type: 'message', data: this.config}));
+				
+			}.bind(this);
+			
 			this.client.onmessage = function(e) {
 
 				var message = JSON.parse(e.data);
@@ -182,30 +174,22 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 					
 				} else if (message.type == 'Error'){
 						
-					this.config.onError('Connection error:\n' + message.data + '\n');
+					console.log('Error message:\n' + message.data + '\n');
 								
-				} else {
-						
-					this.config.onError('Unknown message type: ' + message.type + '\n');
-							
-				}
+				} else { console.log('Unknown message type: ' + message.type + '\n'); }
 						
 			}.bind(this);
 					
-			this.client.onerror = function() {
+			this.client.onerror = function(e) { this.config.onError(e); }.bind(this);
 
-				this.config.onError('Client onerror event...');
+			this.client.onclose = function(e) {
 
-			}.bind(this);
+				console.log('onclose event:');
+				console.log('wasClean: ' + e.wasClean);
+				console.log('code: ' + e.code);
+				console.log('reason: ' + e.reason + '\n');
 
-			this.client.onclose = function(event) {
-
-				console.log('Client onclose event:');
-				this.config.onError('wasClean: ' + event.wasClean);
-				this.config.onError('code: ' + event.code);
-				this.config.onError('reason: ' + event.reason + '\n');
-
-			}.bind(this);
+			};
 		},
 
 		/**
@@ -249,15 +233,6 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 			}
 
 			this._sendRaw(sb);			
-		},
-		
-		/**
-		 * Завершает сессию распознавания речи, закрывая соединение с сервером.
-		 */
-		close: function () {
-		
-			if (this.client.readyState === this.client.OPEN) { this.client.close(); }
-
 		}
 	};
 
