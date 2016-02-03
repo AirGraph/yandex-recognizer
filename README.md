@@ -54,7 +54,7 @@ service.send(db, fileSize, sbLength);
 
 `onError(errMsg)` method receive error massages.
 
-## Limitation
+## Limitations
 Input sound file format may be: 
 
 * Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 16000 (`namespace.FORMAT.PCM16` (default))
