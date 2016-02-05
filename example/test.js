@@ -1,4 +1,4 @@
-//	Yandex Speech Recognition test for Node JS 4.2.4.
+//	Yandex Speech Recognition for Node JS 4.2.4.
 //		Version 0.0.3.
 //			Copyright (c) Jungle Software, 2016.
 
@@ -9,7 +9,7 @@ var fs = require('fs'),
 		commandLineArgs = require('command-line-args'), 
 		options = commandLineOptions(),
 
-		fileSize, db, service, sbLength;
+		fileSize, db, service, cbLength;
 		
 function main() {
 
@@ -48,7 +48,7 @@ function onConnect(sessionId, code) {
 	console.log('sessionId: ' + sessionId);
 	console.log('code: ' + code + '\n');
 	
-	service.send(db, fileSize, sbLength);
+	service.send(db, cbLength);
 	
 }
 
@@ -75,21 +75,21 @@ function commandLineOptions() {
 	var clo = commandLineArgs([
 	
 		{ name: "file", alias: "f", type: String },
-		{ name: "sample", alias: "s", type: Number }
+		{ name: "chunk", alias: "c", type: Number }
 		
 	]), options = clo.parse();
 		
 	if ("file" in options) {
 	
-		if ("sample" in options) {
+		if ("chunk" in options) {
 		
-			sbLength = options.sample;
+			cbLength = options.chunk;
 			return options;
 			
 		} else {
 		
-			sbLength = 128000;
-			console.log('Sample length is set to 128000 by default...\n');
+			cbLength = 32000;
+			console.log('Chunk length is set to 32000 by default...\n');
 			return options;
 			
 		}
@@ -98,7 +98,7 @@ function commandLineOptions() {
 	console.log(clo.getUsage({
 			
 		title: "Usage",
-		description: "node ysr -f|--file name.ext [-s|--sample value]"
+		description: "node ysr -f|--file name.ext [-c|--chunk value]"
 
 	}));
 	
