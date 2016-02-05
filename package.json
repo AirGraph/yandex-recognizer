@@ -1,6 +1,6 @@
 {
   "name": "yandex-recognizer",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Node JS interface to Yandex speech recognition service",
   "main": "yandex-recognizer.js",
   "dependencies": {
