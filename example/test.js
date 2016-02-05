@@ -98,7 +98,7 @@ function commandLineOptions() {
 	console.log(clo.getUsage({
 			
 		title: "Usage",
-		description: "node ysr -f|--file name.ext [-c|--chunk value]"
+		description: "node test -f|--file name.ext [-c|--chunk value]"
 
 	}));
 	
