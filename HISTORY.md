@@ -1,3 +1,7 @@
 0.0.1 01-27-2016
 ----------------
 * Initial release support of yandex speech recognition service using native node.js interface
+
+0.1.0 02-06-2016
+----------------
+* Fixed a problem with splitting large input PCM file into chunks...
