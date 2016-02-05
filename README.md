@@ -44,21 +44,19 @@ service.connect();
 ```
 `onConnect(sessionId, code)` method will launched in case of successfull connect. Here you send sound data for recognition:
 ```
-service.send(db, fileSize, sbLength);
+service.send(db, cbLength);
 
 // db (typeof Buffer) - your sound file data.
-// fileSile (typeof Number) - length of your db.
-// sbLength (typeof Number) - length of sample buffer.
+// cbLength (typeof Number) - length of chunk buffer.
 ```
 `onResult(text, uttr, merge, words)` method receive recognized text and some other data.
 
 `onError(errMsg)` method receive error massages.
 
 ## Limitations
-Input sound file format may be: 
+Input audio file format may be now only: 
 
-* Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 16000 (`namespace.FORMAT.PCM16` (default))
-* Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 44100 (`namespace.FORMAT.PCM44`)
+* Sample Encoding: 16-bit Signed Integer PCM, Sample Rate: 16000, 1 Channel.
 
 ## Next Steps
  * [yandex-recognizer documentation](https://github.com/AirGraph/yandex-recognizer)
