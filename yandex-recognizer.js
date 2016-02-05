@@ -1,5 +1,5 @@
 //	Yandex Recognizer for Node JS 4.2.4.
-//		Version 0.0.1.
+//		Version 0.1.0.
 //			Copyright (c) Yandex & Jungle Software, 2016.
 
 var W3CWebSocket = require('websocket').w3cwebsocket,
@@ -15,7 +15,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	namespace.FORMAT = {
 	
 		PCM16: 'audio/x-pcm;bit=16;rate=16000',
-		PCM44: 'audio/x-pcm;bit=16;rate=44100',
+		PCM44: 'audio/x-pcm;bit=16;rate=44100'
 		
 	};
 
@@ -142,6 +142,67 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		},
 
 		/**
+	 	* Write string `str` to object `view` at the specified offset.
+	 	*/
+		_writeStr: function(view, offset, str) {
+		
+			for (var i = 0; i < str.length; i += 1) {
+			
+				view.setUint8(offset + i, str.charCodeAt(i));
+				
+			}
+		},
+
+		/**
+		* Return Int16Array with 44 bytes RIFF header.
+		*/
+		_getChunkBuff: function(cbLength) {
+
+			var ab = new ArrayBuffer(44 + cbLength),
+					dv = new DataView(ab), cb = new Int16Array(ab);
+
+			this._writeStr(dv, 0, 'RIFF');				// RIFF identifier
+			dv.setUint32(4, 44 + cbLength, true);	// File length (why 32, not 44 ???)
+			this._writeStr(dv, 8, 'WAVE');				// RIFF type
+			this._writeStr(dv, 12, 'fmt ');				// Format chunk identifier
+			dv.setUint32(16, 16, true);						// Format chunk length
+			dv.setUint16(20, 1, true);						// Sample format (1 is PCM)
+			dv.setUint16(22, 1, true);						// Channel count
+			dv.setUint32(24, 16000, true);			 	// Sample Rate = Number of Samples per second
+			dv.setUint32(28, 32000, true); 				// Sample Rate*BitsPerSample*Channels/8
+			dv.setUint16(32, 2, true);						// BitsPerSample*Channels/8
+			dv.setUint16(34, 16, true);						// Bits per sample
+			this._writeStr(dv, 36, 'data');				// Data chunk identifier
+			dv.setUint32(40, cbLength, true);			// Data chunk length
+
+			return cb;
+		},
+
+		/**
+		* Return RIFF header of the specified data buffer (WAV file readed into Buffer).
+		*/
+		_getRiff: function(db) {
+
+			return {
+			
+				identifier: db.toString('utf8', 0, 4),
+				fileLength: db.readUInt32LE(4),
+				type: db.toString('utf8', 8, 4),
+				formatChunkIdentifier: db.toString('utf8', 12, 4),
+				formatChunkLength: db.readUInt32LE(16),
+				sampleFormat: db.readUInt16LE(20),
+				channelCount: db.readUInt16LE(22),
+				sampleRate: db.readUInt32LE(24),
+				sampleRate_BPS_Channels_8: db.readUInt32LE(28),
+				bitsPerSample_Channels_8: db.readUInt16LE(32),
+				bitsPerSample: db.readUInt16LE(34),
+				dataChunkIdentifier: db.toString('utf8', 36, 4),
+				dataChunkLength: db.readUInt32LE(40)
+
+			};
+		},
+
+		/**
 		 * Запускает процесс распознавания.
 		 */
 		connect: function () {
@@ -156,6 +217,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 			
 			this.client.onopen = function(e) {
 			
+				console.log('onopen event, sending config...\n');
 				this._sendRaw(JSON.stringify({type: 'message', data: this.config}));
 				
 			}.bind(this);
@@ -171,7 +233,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 						
 					this.config.onResult(message.data);
 					if(message.data.uttr) { this.client.close(); }
-					
+
 				} else if (message.type == 'Error'){
 						
 					console.log('Error message:\n' + message.data + '\n');
@@ -195,44 +257,45 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		/**
 		 * Отсылает данные сервису распознавания.
 		 * @param {Buffer} db Буфер данных входного файла.
-		 * @param {Number} dbLength Длина буфера данных в байтах.
-		 * @param {Number} sbLength Длина буфера сэмпла в Int16.
+		 * @param {Number} cbLength Длина буфера chunk в байтах.
 		 */
-		send: function(db, dbLength, sbLength) {
+		send: function(db, cbLength) {
 
-			var dbTail = dbLength, dbOffset = 0, dbFrame = sbLength*2, dbIndex, 
-					ab = new ArrayBuffer(sbLength), sb = new Int16Array(ab), sbIndex;
+			var	riff = this._getRiff(db), dbTail = riff.fileLength - 44,
+					dbOffset = 44, dbIndex, cbIndex, cb;
 
-			while(dbTail > dbFrame) {
+			while(dbTail > cbLength) {
 			
-				sbIndex = 0;
-				for(dbIndex = dbOffset; dbIndex < dbOffset + dbFrame; dbIndex += 2) {
+				cb = this._getChunkBuff(cbLength);
+				cbIndex = 22;
+
+				for(dbIndex = dbOffset; dbIndex < dbOffset + cbLength; dbIndex += 2) {
 			
-					sb[sbIndex] = db.readInt16LE(dbIndex);
-					sbIndex += 1;
+					cb[cbIndex] = db.readInt16LE(dbIndex);
+					cbIndex += 1;
 				
 				}
 
-				this._sendRaw(sb);
+				this._sendRaw(cb);
 				
-				dbOffset += dbFrame;
-				dbTail -= dbFrame;
+				dbOffset += cbLength;
+				dbTail -= cbLength;
 				
-				ab = new ArrayBuffer(sbLength);
-				sb = new Int16Array(ab);
-				sb.fill(0);
-
 			}
 
-			sbIndex = 0;
-			for(dbIndex = dbOffset; dbIndex < dbTail; dbIndex += 2) {
+			cb = this._getChunkBuff(dbTail);
+			cbIndex = 22;
 			
-				sb[sbIndex] = db.readInt16LE(dbIndex);
-				sbIndex += 1;
+			for(dbIndex = dbOffset; dbIndex < dbOffset + dbTail; dbIndex += 2) {
+			
+				cb[cbIndex] = db.readInt16LE(dbIndex);
+				cbIndex += 1;
 				
 			}
 
-			this._sendRaw(sb);			
+			this._sendRaw(cb);			
+			this._sendRaw(JSON.stringify({type: 'message', data: {command: 'finish'}}));
+
 		}
 	};
 
