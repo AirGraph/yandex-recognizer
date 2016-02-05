@@ -88,7 +88,6 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * Возможные значения:
 	 * <ul>
 	 *	<li>PCM16: 'audio/x-pcm;bit=16;rate=16000';</li>
-	 *	<li>PCM44: 'audio/x-pcm;bit=16;rate=44100';</li>
 	 * </ul>
 	 * @param {String} [config.url] URL сервера, на котором будет производиться
 	 * распознавание. По умолчанию: 'wss://webasr.yandex.net/asrsocket.ws'
