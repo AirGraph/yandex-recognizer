@@ -1,5 +1,5 @@
 //	Yandex Recognizer for Node JS 4.2.4.
-//		Version 0.1.0.
+//		Version 0.1.1.
 //			Copyright (c) Yandex & Jungle Software, 2016.
 
 var W3CWebSocket = require('websocket').w3cwebsocket,
@@ -15,7 +15,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	namespace.FORMAT = {
 	
 		PCM16: 'audio/x-pcm;bit=16;rate=16000',
-
+		
 	};
 
 	/** Recognizer default config
@@ -161,7 +161,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 					dv = new DataView(ab), cb = new Int16Array(ab);
 
 			this._writeStr(dv, 0, 'RIFF');				// RIFF identifier
-			dv.setUint32(4, 44 + cbLength, true);	// File length (why 32, not 44 ???)
+			dv.setUint32(4, 44 + cbLength, true);	// File length
 			this._writeStr(dv, 8, 'WAVE');				// RIFF type
 			this._writeStr(dv, 12, 'fmt ');				// Format chunk identifier
 			dv.setUint32(16, 16, true);						// Format chunk length
