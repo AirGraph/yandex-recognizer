@@ -15,8 +15,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	namespace.FORMAT = {
 	
 		PCM16: 'audio/x-pcm;bit=16;rate=16000',
-		PCM44: 'audio/x-pcm;bit=16;rate=44100'
-		
+
 	};
 
 	/** Recognizer default config
