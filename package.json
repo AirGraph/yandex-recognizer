@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "description": "Node JS interface to Yandex speech recognition service",
   "main": "yandex-recognizer.js",
-  "dependencies": {
+  "keywords": [
+    "speech recognition"
+  ],
+"dependencies": {
     "node-uuid": "~1.4.7",
     "websocket": "~1.0.22"
   },
