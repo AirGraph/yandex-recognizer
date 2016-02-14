@@ -8,7 +8,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 (function (namespace) {
 	'use strict';
 
-  /** Avalible audio formats.
+  /** Available audio formats.
 	 * @readonly
 	 * @enum
 	 */
@@ -80,7 +80,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * @param {String} [config.uuid] Session UUID. Default: uuid.v1().
 	 * @param {String} [config.apikey] API-key. Default: is absent.
 	 * @param {config.format} Audio stream format. Default: PCM16.
-	 * Avalible values:
+	 * Available values:
 	 * <ul>
 	 *	<li>PCM16: 'audio/x-pcm;bit=16;rate=16000';</li>
 	 * </ul>
@@ -90,7 +90,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * @param {Boolean} [config.allowStrongLanguage] Allow obscent vocabulary.
 	 * Default: true.
 	 * @param {String} [config.model] Lexical model for recognition, Default: 'notes'.
-	 * Avalible values:
+	 * Available values:
 	 * <ul>
 	 *	<li>'notes'</li>
 	 *	<li>'queries'</li>
@@ -100,7 +100,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 *	<li>'numbers'</li>
 	 * </ul>
 	 * @param {String} [config.lang] Language. Default: 'ru-RU'.
-	 * Avalible values: 'ru-RU'; 'en-US'; 'tr-TR'; 'uk-UA'.
+	 * Available values: 'ru-RU'; 'en-US'; 'tr-TR'; 'uk-UA'.
 	 * @param {String} [config.applicationName] Application name. Default: 'jsapi'
 	 * @param {Boolean} [config.partialResults] Send partial results to server.
 	 * Default: true.
