@@ -29,10 +29,10 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		url: 'wss://webasr.yandex.net/asrsocket.ws',
 		applicationName: 'jsapi',
 		
-		partialResults: false,
-		punctuation: true,
+		partialResults: true,
+		punctuation: false,
 		allowStrongLanguage: true,
-		model: 'notes',
+		model: 'freeform',
 		lang: 'ru-RU'
 
 	};
@@ -110,7 +110,8 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * Возможные значения: 'ru-RU'; 'en-US'; 'tr-TR'; 'uk-UA'.
 	 * @param {String} [config.applicationName] Название приложения.
 	 * По умолчанию: 'jsapi'
-	 * @param {Boolean} [config.partialResults=true] Получать ли промежуточные результаты.
+	 * @param {Boolean} [config.partialResults=true] Отправлять ли на сервер
+	 * промежуточные результаты.
 	 */
 	var Recognizer = function(config) {
 	
@@ -127,18 +128,6 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 
 	Recognizer.prototype = /** @lends Recognizer.prototype */{
 	
-		/**
-		 * Send raw data to websocket.
-		 * @param data Any data to send to websocket (json string, raw audio data).
-		 * @private
-		 */
-		_sendRaw: function (data) {
-		
-			if (this.client.readyState === this.client.OPEN) { this.client.send(data); }
-			else { console.log('Missing data!!! readyState != OPEN!!!'); }
-			
-		},
-
 		/**
 	 	* Write string `str` to object `view` at the specified offset.
 	 	*/
@@ -167,7 +156,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 			dv.setUint16(20, 1, true);						// Sample format (1 is PCM)
 			dv.setUint16(22, 1, true);						// Channel count
 			dv.setUint32(24, 16000, true);			 	// Sample Rate = Number of Samples per second
-			dv.setUint32(28, 32000, true); 				// Sample Rate*BitsPerSample*Channels/8
+			dv.setUint32(28, 32000, true); 				// SampleRate*BitsPerSample*Channels/8
 			dv.setUint16(32, 2, true);						// BitsPerSample*Channels/8
 			dv.setUint16(34, 16, true);						// Bits per sample
 			this._writeStr(dv, 36, 'data');				// Data chunk identifier
@@ -177,7 +166,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		},
 
 		/**
-		* Return RIFF header of the specified data buffer (WAV file readed into Buffer).
+		* Return RIFF header of the specified data buffer (WAV file loaded into Buffer).
 		*/
 		_getRiff: function(db) {
 
@@ -215,8 +204,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 			
 			this.client.onopen = function(e) {
 			
-				console.log('onopen event, sending config...\n');
-				this._sendRaw(JSON.stringify({type: 'message', data: this.config}));
+				this.client.send(JSON.stringify({type: 'message', data: this.config}));
 				
 			}.bind(this);
 			
@@ -230,7 +218,12 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 				} else if (message.type == 'AddDataResponse'){
 						
 					this.config.onResult(message.data);
-					if(message.data.uttr) { this.client.close(); }
+					if(message.data.close) { this.client.close(); }
+					if(message.data.text === '') {
+
+						this.client.send(JSON.stringify({type: 'message', data: {command: 'finish'}}));
+
+					}
 
 				} else if (message.type == 'Error'){
 						
@@ -274,14 +267,14 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 				
 				}
 
-				this._sendRaw(cb);
+				this.client.send(cb);
 				
 				dbOffset += cbLength;
 				dbTail -= cbLength;
 				
 			}
 
-			cb = this._getChunkBuff(dbTail);
+			cb = this._getChunkBuff(cbLength);
 			cbIndex = 22;
 			
 			for(dbIndex = dbOffset; dbIndex < dbOffset + dbTail; dbIndex += 2) {
@@ -291,9 +284,10 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 				
 			}
 
-			this._sendRaw(cb);			
-			this._sendRaw(JSON.stringify({type: 'message', data: {command: 'finish'}}));
+			this.client.send(cb);			
 
+			cb = this._getChunkBuff(cbLength);		// ... silence ...
+			this.client.send(cb);			
 		}
 	};
 
