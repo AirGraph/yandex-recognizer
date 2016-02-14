@@ -1,4 +1,4 @@
-//	Yandex Recognizer for Node JS 4.2.4.
+//	Yandex Recognizer for Node JS 4.3.
 //		Version 0.2.0.
 //			Copyright (c) Yandex & Jungle Software, 2016.
 
