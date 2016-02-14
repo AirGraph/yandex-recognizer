@@ -5,3 +5,7 @@
 0.1.0 02-06-2016
 ----------------
 * Fixed a problem with splitting large input PCM file into chunks...
+
+0.2.0 02-13-2016
+----------------
+* Fixed a problem with partial results for large input PCM file...
