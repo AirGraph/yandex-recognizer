@@ -1,5 +1,5 @@
 //	Yandex Recognizer for Node JS 4.2.4.
-//		Version 0.1.1.
+//		Version 0.2.0.
 //			Copyright (c) Yandex & Jungle Software, 2016.
 
 var W3CWebSocket = require('websocket').w3cwebsocket,
