@@ -8,17 +8,13 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 (function (namespace) {
 	'use strict';
 
-  /** Набор поддерживаемых форматов аудио.
+  /** Avalible audio formats.
 	 * @readonly
 	 * @enum
 	 */
-	namespace.FORMAT = {
-	
-		PCM16: 'audio/x-pcm;bit=16;rate=16000',
-		
-	};
+	namespace.FORMAT = { PCM16: 'audio/x-pcm;bit=16;rate=16000' };
 
-	/** Recognizer default config
+	/** Recognizer default config.
 	 * @readonly
 	 * @enum
 	 */
@@ -73,45 +69,41 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	};
 
 	/**
-	 * Создает новый объект типа Recognizer.
-	 * @class Создает сессию и отправляет запрос на сервер для распознавания речи.
+	 * Create new object typeof Recognizer.
 	 * @name Recognizer
-	 * @param {Object} [config] Конфигурация.
-	 * @param {callback:initCallback} [config.onConnect] Функция-обработчик,
-	 * которая будет вызвана после успешной инициализации сессии. Умолчания нет.
-	 * @param {callback:dataCallback} [config.onResult] Функция-обработчик,
-	 * которая будет вызвана после завершения распознавания речи. Умолчания нет.
-	 * @param {callback:errorCallback} [config.onError] Умолчания нет.
-	 * @param {String} [config.uuid] UUID сессии. По умолчанию: uuid.v1().
-	 * @param {String} [config.apikey] API-ключ. Умолчания нет.
-	 * @param {config.format} Формат аудиопотока. По умолчанию: PCM16.
-	 * Возможные значения:
+	 * @param {Object} [config] Configuration.
+	 * @param {callback:initCallback} [config.onConnect] Callback function,
+	 * that will be called after successful session initialization. Default: is absent.
+	 * @param {callback:dataCallback} [config.onResult] Callback function,
+	 * that will be called after speech recognition. Default: is absent.
+	 * @param {callback:errorCallback} [config.onError] Default: is absent.
+	 * @param {String} [config.uuid] Session UUID. Default: uuid.v1().
+	 * @param {String} [config.apikey] API-key. Default: is absent.
+	 * @param {config.format} Audio stream format. Default: PCM16.
+	 * Avalible values:
 	 * <ul>
 	 *	<li>PCM16: 'audio/x-pcm;bit=16;rate=16000';</li>
 	 * </ul>
-	 * @param {String} [config.url] URL сервера, на котором будет производиться
-	 * распознавание. По умолчанию: 'wss://webasr.yandex.net/asrsocket.ws'
-	 * @param {Boolean} [config.punctuation] Использовать ли пунктуацию.
-	 * По умолчанию: true
-	 * @param {Boolean} [config.allowStrongLanguage] Распознавать обсценную лексику.
-	 * По умолчанию: true
-	 * @param {String} [config.model] Языковая модель, которая должна быть
-	 * использована при распознавании. По умолчанию: 'notes'. Возможные значения:
+	 * @param {String} [config.url] Server recognition URL.
+	 * Default: 'wss://webasr.yandex.net/asrsocket.ws'.
+	 * @param {Boolean} [config.punctuation] Use punctuation. Default: true.
+	 * @param {Boolean} [config.allowStrongLanguage] Allow obscent vocabulary.
+	 * Default: true.
+	 * @param {String} [config.model] Lexical model for recognition, Default: 'notes'.
+	 * Avalible values:
 	 * <ul>
-	 *	<li>'notes' — общая лексика;</li>
-	 *	<li>'queries' — короткие запросы;</li>
-	 *	<li>'names' — имена; </li>
-	 *	<li>'dates' — даты; </li>
-	 *	<li>'maps' — топонимы;</li>
-	 *	<li>'notes' — тексты;</li>
-	 *	<li>'numbers' — числа.</li>
+	 *	<li>'notes'</li>
+	 *	<li>'queries'</li>
+	 *	<li>'names'</li>
+	 *	<li>'dates'</li>
+	 *	<li>'maps'</li>
+	 *	<li>'numbers'</li>
 	 * </ul>
-	 * @param {String} [config.lang] Язык распознавания. По умолчанию: 'ru-RU'.
-	 * Возможные значения: 'ru-RU'; 'en-US'; 'tr-TR'; 'uk-UA'.
-	 * @param {String} [config.applicationName] Название приложения.
-	 * По умолчанию: 'jsapi'
-	 * @param {Boolean} [config.partialResults=true] Отправлять ли на сервер
-	 * промежуточные результаты.
+	 * @param {String} [config.lang] Language. Default: 'ru-RU'.
+	 * Avalible values: 'ru-RU'; 'en-US'; 'tr-TR'; 'uk-UA'.
+	 * @param {String} [config.applicationName] Application name. Default: 'jsapi'
+	 * @param {Boolean} [config.partialResults] Send partial results to server.
+	 * Default: true.
 	 */
 	var Recognizer = function(config) {
 	
@@ -166,7 +158,8 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		},
 
 		/**
-		* Return RIFF header of the specified data buffer (WAV file loaded into Buffer).
+		* Return RIFF header of the specified data buffer
+		* (usualy WAV file loaded into db).
 		*/
 		_getRiff: function(db) {
 
@@ -190,14 +183,13 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		},
 
 		/**
-		 * Запускает процесс распознавания.
+		 * Connect recognition service.
 		 */
 		connect: function () {
 
 			this.client = new W3CWebSocket(
 			
-				this.config.url, [], null, null, null,
-				{ fragmentOutgoingMessages: false }
+				this.config.url, [], null, null, null, { fragmentOutgoingMessages: false }
 				
 			);
 			this.client.binaryType = 'arraybuffer';
@@ -246,9 +238,9 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		},
 
 		/**
-		 * Отсылает данные сервису распознавания.
-		 * @param {Buffer} db Буфер данных входного файла.
-		 * @param {Number} cbLength Длина буфера chunk в байтах.
+		 * Send data to recognition service.
+		 * @param {Buffer} db Input file data buffer.
+		 * @param {Number} cbLength Chunk buffer length in bytes.
 		 */
 		send: function(db, cbLength) {
 
