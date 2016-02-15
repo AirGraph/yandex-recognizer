@@ -112,10 +112,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		}
 
 		this.config = namespace._apply({}, config, namespace._defaults);
-
 		this.recognizedText = false;
-
-		// Backward compatibility
 		this.config.key = this.config.apikey;
 
 	};
