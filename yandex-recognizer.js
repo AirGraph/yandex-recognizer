@@ -161,7 +161,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 
 		/**
 		* Return RIFF header of the specified data buffer
-		* (usualy WAV file loaded into db).
+		* (usually WAV file loaded into db).
 		*/
 		_getRiff: function(db) {
 
