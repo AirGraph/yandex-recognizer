@@ -1,5 +1,5 @@
 //	Yandex Recognizer for Node JS 4.3.
-//		Version 0.2.0.
+//		Version 0.2.1.
 //			Copyright (c) Yandex & Jungle Software, 2016.
 
 var W3CWebSocket = require('websocket').w3cwebsocket,
@@ -113,6 +113,8 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 
 		this.config = namespace._apply({}, config, namespace._defaults);
 
+		this.recognizedText = false;
+
 		// Backward compatibility
 		this.config.key = this.config.apikey;
 
@@ -210,10 +212,14 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 				} else if (message.type == 'AddDataResponse'){
 						
 					this.config.onResult(message.data);
-					if(message.data.close) { this.client.close(); }
 					if(message.data.text === '') {
+					
+						if(this.recognizedText) { this.client.close(); }
 
-						this.client.send(JSON.stringify({type: 'message', data: {command: 'finish'}}));
+					} else {
+
+						this.recognizedText = true;						
+						if(message.data.close) { this.client.close(); }
 
 					}
 
