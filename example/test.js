@@ -1,4 +1,4 @@
-//	Yandex Speech Recognition for Node JS 4.2.4.
+//	Yandex Speech Recognition for Node JS 4.3.
 //		Version 0.0.3.
 //			Copyright (c) Jungle Software, 2016.
 
