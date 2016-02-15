@@ -1,8 +1,11 @@
 {
-  "name": "test",
+  "name": "ysr",
   "version": "0.0.3",
-  "description": "Test for yandex-recognizer",
-  "main": "test.js",
+  "description": "Test for Yandex Speech Recognition",
+  "main": "ysr.js",
+  "keywords": [
+    "speech-recognition"
+  ],
   "dependencies": {
     "yandex-recognizer": "~0.2.1",
     "command-line-args": "~2.1.4"
