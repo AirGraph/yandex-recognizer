@@ -92,6 +92,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * @param {String} [config.model] Lexical model for recognition, Default: 'notes'.
 	 * Available values:
 	 * <ul>
+	 *	<li>'freeform'</li>
 	 *	<li>'notes'</li>
 	 *	<li>'queries'</li>
 	 *	<li>'names'</li>
