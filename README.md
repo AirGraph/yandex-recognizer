@@ -29,11 +29,12 @@ Create service:
 ```
 var service = yandex.Recognizer({config});
 ```
-`config` object must define at least 4 properties:
+`config` object must define at least 5 properties:
 ```
 onConnect: function(sessionId, code),
-onResult: function(text, uttr, merge, words),
-onError: function(errMsg),
+onResult: function(data),
+onError: function(e),
+onClose: function(e),
 apikey: 'YOUR-OWN-YANDEX-API-KEY'
 
 // All other properties will be set by default (see source code for all available).
@@ -49,9 +50,11 @@ service.send(db, cbLength);
 // db (typeof Buffer) - your sound file data.
 // cbLength (typeof Number) - length of chunk buffer.
 ```
-`onResult(text, uttr, merge, words)` method receive recognized text and some other data.
+`onResult(data)` method receive recognized text and some other data.
 
-`onError(errMsg)` method receive error massages.
+`onError(e)` method receive error massages.
+
+`onClose(e)` method receive close massage.
 
 ## Limitations
 Input audio file format may be now only: 
