@@ -32,7 +32,7 @@ function main() {
 					onResult: onResult,
 					onClose: onClose,
 					onError: onError,
-					apikey: 'YOUR-OWN-API-KEY',
+					apikey: 'YOUR-OWN-YANDEX-API-KEY',
 
 				});
 
