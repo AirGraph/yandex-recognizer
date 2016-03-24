@@ -1,5 +1,5 @@
 //	Yandex Recognizer for Node JS 4.3.
-//		Version 0.2.1.
+//		Version 0.2.2.
 //			Copyright (c) Yandex & Jungle Software, 2016.
 
 var W3CWebSocket = require('websocket').w3cwebsocket,
@@ -8,7 +8,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 (function (namespace) {
 	'use strict';
 
-  /** Available audio formats.
+	/** Available audio formats.
 	 * @readonly
 	 * @enum
 	 */
@@ -24,7 +24,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		format: namespace.FORMAT.PCM16,
 		url: 'wss://webasr.yandex.net/asrsocket.ws',
 		applicationName: 'jsapi',
-		
+
 		partialResults: true,
 		punctuation: false,
 		allowStrongLanguage: true,
@@ -32,25 +32,25 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		lang: 'ru-RU'
 
 	};
-	
+
 	/**
 	 * Copies all the properties of `config` to the specified `object`.
 	 * There are two levels of defaulting supported:
-	 * 
+	 *
 	 *	_apply(obj, { a: 1 }, { a: 2 });
 	 *	//obj.a === 1
-	 * 
+	 *
 	 *	_apply(obj, {	 }, { a: 2 });
 	 *	//obj.a === 2
-	 * 
+	 *
 	 * @param {Object} object The receiver of the properties.
 	 * @param {Object} config The primary source of the properties.
 	 * @param {Object} [defaults] The properties default value.
 	 * @return {Object} returns `object`.
 	 */
 	namespace._enumerables = [//'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable',
-                       'valueOf', 'toLocaleString', 'toString', 'constructor'];
-                       
+											 'valueOf', 'toLocaleString', 'toString', 'constructor'];
+
 	for (var i in { toString: 1 }) { namespace._enumerables = null; }
 
 	namespace._apply = function(object, config, defaults) {
@@ -58,7 +58,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		if (object && config && typeof config === 'object') {
 			var i, j, k;
 			for (i in config) { object[i] = config[i]; }
-			if (namespace._enumerables) {		 
+			if (namespace._enumerables) {
 				for (j = namespace._enumerables.length; j--;) {
 					k = namespace._enumerables[j];
 					if (config.hasOwnProperty(k)) { object[k] = config[k]; }
@@ -107,7 +107,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	 * Default: true.
 	 */
 	var Recognizer = function(config) {
-	
+
 		if (!(this instanceof namespace.Recognizer)) {
 			return new namespace.Recognizer(config);
 		}
@@ -119,16 +119,14 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 	};
 
 	Recognizer.prototype = /** @lends Recognizer.prototype */{
-	
+
 		/**
-	 	* Write string `str` to object `view` at the specified offset.
-	 	*/
+		* Write string `str` to object `view` at the specified offset.
+		*/
 		_writeStr: function(view, offset, str) {
-		
+
 			for (var i = 0; i < str.length; i += 1) {
-			
 				view.setUint8(offset + i, str.charCodeAt(i));
-				
 			}
 		},
 
@@ -141,14 +139,14 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 					dv = new DataView(ab), cb = new Int16Array(ab);
 
 			this._writeStr(dv, 0, 'RIFF');				// RIFF identifier
-			dv.setUint32(4, 44 + cbLength, true);	// File length
+			dv.setUint32(4, 44 + cbLength, true); // File length
 			this._writeStr(dv, 8, 'WAVE');				// RIFF type
 			this._writeStr(dv, 12, 'fmt ');				// Format chunk identifier
 			dv.setUint32(16, 16, true);						// Format chunk length
 			dv.setUint16(20, 1, true);						// Sample format (1 is PCM)
 			dv.setUint16(22, 1, true);						// Channel count
-			dv.setUint32(24, 16000, true);			 	// Sample Rate = Number of Samples per second
-			dv.setUint32(28, 32000, true); 				// SampleRate*BitsPerSample*Channels/8
+			dv.setUint32(24, 16000, true);				// Sample Rate = Number of Samples per second
+			dv.setUint32(28, 32000, true);				// SampleRate*BitsPerSample*Channels/8
 			dv.setUint16(32, 2, true);						// BitsPerSample*Channels/8
 			dv.setUint16(34, 16, true);						// Bits per sample
 			this._writeStr(dv, 36, 'data');				// Data chunk identifier
@@ -164,7 +162,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		_getRiff: function(db) {
 
 			return {
-			
+
 				identifier: db.toString('utf8', 0, 4),
 				fileLength: db.readUInt32LE(4),
 				type: db.toString('utf8', 8, 4),
@@ -188,57 +186,51 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		connect: function () {
 
 			this.client = new W3CWebSocket(
-			
+
 				this.config.url, [], null, null, null, { fragmentOutgoingMessages: false }
-				
+
 			);
 			this.client.binaryType = 'arraybuffer';
-			
+
 			this.client.onopen = function(e) {
-			
+
 				this.client.send(JSON.stringify({type: 'message', data: this.config}));
-				
+
 			}.bind(this);
-			
+
 			this.client.onmessage = function(e) {
 
 				var message = JSON.parse(e.data);
 				if (message.type == 'InitResponse'){
-						
+
 					this.config.onConnect(message.data.sessionId, message.data.code);
-						
+
 				} else if (message.type == 'AddDataResponse'){
-						
+
 					this.config.onResult(message.data);
 					if(message.data.text === '') {
-					
+
 						if(this.recognizedText) { this.client.close(); }
 
 					} else {
 
-						this.recognizedText = true;						
+						this.recognizedText = true;
 						if(message.data.close) { this.client.close(); }
 
 					}
 
 				} else if (message.type == 'Error'){
-						
+
 					console.log('Error message:\n' + message.data + '\n');
-								
+
 				} else { console.log('Unknown message type: ' + message.type + '\n'); }
-						
+
 			}.bind(this);
-					
+
 			this.client.onerror = function(e) { this.config.onError(e); }.bind(this);
 
-			this.client.onclose = function(e) {
+			this.client.onclose = function(e) { this.config.onClose(e); }.bind(this);
 
-				console.log('onclose event:');
-				console.log('wasClean: ' + e.wasClean);
-				console.log('code: ' + e.code);
-				console.log('reason: ' + e.reason + '\n');
-
-			};
 		},
 
 		/**
@@ -248,42 +240,42 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		 */
 		send: function(db, cbLength) {
 
-			var	riff = this._getRiff(db), dbTail = riff.fileLength - 44,
+			var riff = this._getRiff(db), dbTail = riff.fileLength - 44,
 					dbOffset = 44, dbIndex, cbIndex, cb;
 
 			while(dbTail > cbLength) {
-			
+
 				cb = this._getChunkBuff(cbLength);
 				cbIndex = 22;
 
 				for(dbIndex = dbOffset; dbIndex < dbOffset + cbLength; dbIndex += 2) {
-			
+
 					cb[cbIndex] = db.readInt16LE(dbIndex);
 					cbIndex += 1;
-				
+
 				}
 
 				this.client.send(cb);
-				
+
 				dbOffset += cbLength;
 				dbTail -= cbLength;
-				
+
 			}
 
 			cb = this._getChunkBuff(cbLength);
 			cbIndex = 22;
-			
+
 			for(dbIndex = dbOffset; dbIndex < dbOffset + dbTail; dbIndex += 2) {
-			
+
 				cb[cbIndex] = db.readInt16LE(dbIndex);
 				cbIndex += 1;
-				
+
 			}
 
-			this.client.send(cb);			
+			this.client.send(cb);
 
 			cb = this._getChunkBuff(cbLength);		// ... silence ...
-			this.client.send(cb);			
+			this.client.send(cb);
 		}
 	};
 
