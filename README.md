@@ -27,15 +27,19 @@ var yandex = require('yandex-recognizer');
 ```
 Create service:
 ```
-var service = yandex.Recognizer({config});
+var service = yandex.Recognizer(config);
 ```
 `config` object must define at least 5 properties:
 ```
-onConnect: function(sessionId, code),
-onResult: function(data),
-onError: function(e),
-onClose: function(e),
-apikey: 'YOUR-OWN-YANDEX-API-KEY'
+config = {
+
+	onConnect: function(sessionId, code),
+	onResult: function(data),
+	onError: function(e),
+	onClose: function(e),
+	apikey: 'YOUR-OWN-YANDEX-API-KEY'
+
+}
 
 // All other properties will be set by default (see source code for all available).
 ```
