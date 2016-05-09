@@ -42,6 +42,7 @@ config = {
 }
 ```
 All other properties will be set by default (see source code for all available).
+
 Connect service to your app:
 ```
 service.connect();
