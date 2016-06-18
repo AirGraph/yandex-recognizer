@@ -1,5 +1,5 @@
-//	Yandex Recognizer for Node JS 4.3.
-//		Version 0.2.2.
+//	Yandex Recognizer for Node JS 4.4.5
+//		Version 0.3.0.
 //			Copyright (c) Yandex & Jungle Software, 2016.
 
 var W3CWebSocket = require('websocket').w3cwebsocket,
@@ -25,6 +25,7 @@ var W3CWebSocket = require('websocket').w3cwebsocket,
 		url: 'wss://webasr.yandex.net/asrsocket.ws',
 		applicationName: 'jsapi',
 
+		utteranceSilence: 240,
 		partialResults: true,
 		punctuation: false,
 		allowStrongLanguage: true,
