@@ -17,3 +17,7 @@
 0.2.4 05-09-2016
 ----------------
 * Minor patch...
+
+0.3.0 06-18-2016
+----------------
+* Added `utteranceSilence` advanced option...
