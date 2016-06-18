@@ -12,7 +12,7 @@
 
 0.2.2 03-24-2016
 ----------------
-* Added onClose event handler...
+* Added `onClose` event handler...
 
 0.2.4 05-09-2016
 ----------------
